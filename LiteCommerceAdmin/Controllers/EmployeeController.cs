@@ -97,13 +97,22 @@ namespace LiteCommerceAdmin.Controllers
                 }
                 else
                 {
-                    if (PhotoPath != null && PhotoPath.ContentLength > 0)
+                    if(model.PhotoPath != "")
                     {
-                        var ResumeName = Path.GetFileName(PhotoPath.FileName);
-                        string path = System.IO.Path.Combine(Server.MapPath("~/Uploads/"), ResumeName);
-                        PhotoPath.SaveAs(path);
-                        model.PhotoPath = "/Uploads/" + PhotoPath.FileName;
+                        if (PhotoPath != null && PhotoPath.ContentLength > 0)
+                        {
+                            var ResumeName = Path.GetFileName(PhotoPath.FileName);
+                            string path = System.IO.Path.Combine(Server.MapPath("~/Uploads/"), ResumeName);
+                            PhotoPath.SaveAs(path);
+                            model.PhotoPath = "/Uploads/" + PhotoPath.FileName;
+                        }
                     }
+                    else
+                    {
+                        Employee editEmployee = CatelogBLL.GetEmployee(model.EmployeeID);
+                        model.PhotoPath = editEmployee.PhotoPath;
+                    }
+                    
                     CatelogBLL.UpdateEmployee(model);
                 }
                 return RedirectToAction("Index");
