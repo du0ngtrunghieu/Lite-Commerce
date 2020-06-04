@@ -1,0 +1,119 @@
+﻿@model LiteCommerceAdmin.Models.ShipperPaginationResult
+@{
+    ViewBag.Title = "Manage Shippers";
+    int i = 0;
+    string search;
+    if (!string.IsNullOrEmpty(Model.SearchValue))
+    {
+        search = string.Format("&searchValue={0}", Model.SearchValue);
+    }
+    else
+    {
+        search = "";
+    }
+}
+<div class="box box-primary">
+    <div class="box-body">
+        <form action="~/Shipper" method="get">
+            <div class="input-group input-group-sm">
+
+                <input value="@Model.SearchValue" name="searchValue" type="text" class="form-control" placeholder="Input search value...">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+
+            </div>
+        </form>
+    </div>
+</div>
+<form method="post" action="~/Shipper/Delete">
+    <div class="container-fluid row" style="margin-bottom:10px">
+        <div class="col-sm-8">
+            There are <b>@Model.RowCount</b> Shippers. Page @string.Format("{0}/{1}", Model.Page, Model.PageCount)
+        </div>
+        <div class="col-md-4 text-right">
+            <div class="btn-group">
+                <a href="~/Shipper/Input" class="btn btn-sm btn-primary">Add Shipper</a>
+                <button type="submit" class="btn btn-sm btn-danger">Delete Shippers</button>
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Danh sách Shipper</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        <input type="checkbox" id="selectAll"  />
+                    </th>
+                    <th>Shipper ID</th>
+                    <th>Company Name</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    @foreach (var Shipper in Model.Data)
+            {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="shipperIDs" value="@Shipper.ShipperID" />
+                        </td>
+                        <td>
+                            @Shipper.ShipperID
+                        </td>
+                        <td>
+                            @Shipper.CompanyName
+                        </td>
+                        <td>
+                            @Shipper.Phone
+                        </td>
+
+
+
+                        <td>
+                            <a class="btn btn-sm btn-default" href="~/Shipper/Input/@Shipper.ShipperID/">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                    </tr>
+
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <ul class="pagination pagination-sm no-margin pull-right">
+
+                    @if (Model.Page > 1)
+            {
+                        <li><a href="~/Shipper?page=@(Model.Page - 1)@search">&laquo;</a></li>
+                    }
+                    @for (int page = 1; page <= Model.PageCount; page++)
+                    {
+
+                        if (Model.Page == page)
+                        {
+                            <li class="active"><a href="~/Shipper?page=@page@search">@page</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="~/Shipper?page=@page@search">@page</a></li>
+                        }
+
+
+                    }
+                    @if (Model.Page < Model.PageCount)
+            {
+                        <li><a href="~/Shipper?page=@(Model.Page + 1)@search">&raquo;</a></li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+</form>

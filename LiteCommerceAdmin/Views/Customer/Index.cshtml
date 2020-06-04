@@ -1,0 +1,164 @@
+﻿@model LiteCommerceAdmin.Models.CustomerPaginationResult
+@{
+    ViewBag.Title = "Manage Customers";
+    int i = 0;
+    string search;
+    if (!string.IsNullOrEmpty(Model.SearchValue))
+    {
+        search = string.Format("&searchValue={0}", Model.SearchValue);
+    }
+    else
+    {
+        search = "";
+    }
+}
+<div class="box box-primary">
+    <div class="box-body">
+        <form action="~/Customer" method="get">
+            <div class="input-group input-group-sm">
+
+                <input value="@Model.SearchValue" name="searchValue" type="text" class="form-control" placeholder="Input search value...">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+
+            </div>
+        </form>
+    </div>
+</div>
+<form method="post" action="~/Customer/Delete">
+    <div class="container-fluid row" style="margin-bottom:10px">
+        <div class="col-sm-8">
+            There are <b>@Model.RowCount</b> Customer. Page @string.Format("{0}/{1}", Model.Page, Model.PageCount)
+        </div>
+        <div class="col-md-4 text-right">
+            <div class="btn-group">
+                <a href="~/Customer/Input" class="btn btn-sm btn-primary">Add Customer</a>
+                <button type="submit" class="btn btn-sm btn-danger">Delete Customers</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Danh sách Customer</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        <input type="checkbox" id="selectAll" />
+                    </th>
+                    <th>Customer ID</th>
+                    <th>Company Name</th>
+                    <th>Contact Name</th>
+                    <th>Contact Title</th>
+                    <th>Address</th>
+                    <th>Fax</th>
+                    <th>Country</th>
+
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    @foreach (var customer in Model.Data)
+                    {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="customerIDs" value="@customer.CustomerID" />
+                        </td>
+                        <td>
+                            @customer.CustomerID
+                        </td>
+                        <td>
+                            @customer.CompanyName
+                        </td>
+                        <td>
+                            @customer.ContactName
+                        </td>
+                        <td>
+                            @customer.ContactTitle
+                        </td>
+                        <td>
+                            @customer.Address
+                        </td>
+                        <td>
+                            @customer.Fax
+                        </td>
+                        <td>
+                            @customer.Country
+                        </td>
+
+
+                        <td>
+                            <a class="btn btn-sm btn-default" href="~/Customer/Input/@customer.CustomerID/">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                    </tr>
+
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <ul class="pagination pagination-sm no-margin pull-right">
+
+                    @if (Model.Page > 1)
+            {
+                        <li><a href="~/Customer?page=@(Model.Page - 1)@search">&laquo;</a></li>
+
+                    }
+                    @if (Model.Page > 3)
+            {
+                        <li><a href="~/Customer?page=1@(search)">1</a></li>
+                        <li class="dots"><a href="#">...</a></li>
+                    }
+                    @if (Model.Page - 2 > 0)
+            {
+                        <li><a href="~/Customer?page=@(Model.Page-2)@search">@(Model.Page - 2)</a></li>
+                    }
+                    @if (Model.Page - 1 > 0)
+            {
+                        <li><a href="~/Customer?page=@(Model.Page-1)@search">@(Model.Page - 1)</a></li>
+                    }
+                    <li class="active"><a href="~/customer?page=@Model.Page@search">@Model.Page</a></li>
+                    @if (Model.Page + 1 < Model.PageCount + 1)
+            {
+                        <li><a href="~/Customer?page=@(Model.Page+1)@search">@(Model.Page + 1)</a></li>
+                    }
+                    @if (Model.Page + 2 < Model.PageCount + 1)
+            {
+                        <li><a href="~/Customer?page=@(Model.Page+2)@search">@(Model.Page + 2)</a></li>
+                    }
+                    @if (Model.Page < Model.PageCount - 2)
+            {
+                        <li class="dots"><a href="#">...</a></li>
+                        <li><a href="~/Customer?page=@Model.PageCount@search">@Model.PageCount</a></li>
+                    }
+                    @*@for (int page = 1; page <= model.pagecount; page++)
+                        {
+
+                        if (model.page == page)
+                        {
+                        <li class="active"><a href="~/customer?page=@page@search">@page</a></li>
+                        }
+                        else
+                        {
+                        <li><a href="~/customer?page=@page@search">@page</a></li>
+                        }
+
+
+                        }*@
+                    @if (Model.Page < Model.PageCount)
+            {
+                        <li><a href="~/Customer?page=@(Model.Page + 1)@search">&raquo;</a></li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </form>
